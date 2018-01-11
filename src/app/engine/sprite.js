@@ -1,5 +1,5 @@
 export class Sprite {
-    tiles = new Map();
+    body = null;
     animations = new Map();
 
     constructor(image, name, x, y, width, height) {
@@ -21,12 +21,11 @@ export class Sprite {
             height
         );
 
-        this.tiles.set(name, buffer);
+        this.body = buffer;
     }
 
-    draw(name, context, x, y) {
-        const buffer = this.tiles.get(name);
-        context.drawImage(buffer, x, y);
+    draw(context, x, y) {
+        context.drawImage(this.body, x, y);
     }
 
     addAnimation(name, frames) {
