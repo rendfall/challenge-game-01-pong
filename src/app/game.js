@@ -79,30 +79,52 @@ export class Game {
     sprites = new Map();
 
     playerOne = null;
+    playerTwo = null;
 
     constructor() {
         console.log('The game is ready.');
 
         this.context = window.app.canvas.getContext('2d');
-        this.setupKeyboard();
-        this.setupAudio();
-        this.setupSprites();
+
+        Promise.all([
+            this.setupKeyboard(),
+            this.setupAudio(),
+            this.setupPlayerOne(),
+            this.setupPlayerTwo()
+        ]).then(() => {
+            this.setupLoop();
+        })
     }
 
     setupKeyboard() {
-        this.keyboard.enable();
+        return new Promise((resolve) => {
+            this.keyboard.enable();
+            resolve();
+        });
     }
 
-    setupAudio() {}
+    setupAudio() {
+        return new Promise((resolve) => {
+            resolve();
+        })
+    }
 
-    setupSprites() {
-        this.playerOne = new Entity(this, 'player-one');
-        this.playerOne.setupInput({ up: 'w', right: 'd', down: 's', left: 'a' });
+    setupPlayerOne() {
+        return new Promise((resolve) => {
+            this.playerOne = new Entity(this, 'player-one');
+            this.playerOne.setupInput({ up: 'w', down: 's' });
+            this.playerOne.createBody(0, 0)
+                .then((image) => resolve(image));
+        });
+    }
 
-        this.playerOne.createBody(0, 0)
-            .then((image) => {
-                this.setupLoop();
-            });
+    setupPlayerTwo() {
+        return new Promise((resolve) => {
+            this.playerTwo = new Entity(this, 'player-two');
+            this.playerTwo.setupInput({ up: 'ArrowUp', down: 'ArrowDown'});
+            this.playerTwo.createBody(APP_CONFIG.width - this.playerTwo.width, 0)
+                .then((image) => resolve(image));
+        });
     }
 
     setupLoop() {
@@ -121,5 +143,6 @@ export class Game {
         this.refreshContext();
 
         this.playerOne.draw(this.context, deltaTime);
+        this.playerTwo.draw(this.context, deltaTime);
     }
 }
