@@ -30,15 +30,11 @@ export class Keyboard {
             ? Keyboard.STATES.pressed
             : Keyboard.STATES.released;
 
-        if (this.keyStates.get(keyCode) === keyState) {
-            return;
-        }
-
         this.keyStates.set(keyCode, keyState);
         this.keyMap.get(keyCode)(keyState);
     }
 
-    enable(context = window) {
+    enable() {
         const keyEvents = ['keydown', 'keyup'];
         const handlerFn = this.onEvent.bind(this);
 

@@ -11,7 +11,7 @@ export class Entity {
     height = 100;
     x = 0;
     y = 0;
-    moveBy = 5;
+    moveBy = 15;
 
     constructor(game, name) {
         this.game = game;
@@ -42,10 +42,14 @@ export class Entity {
     }
 
     moveUp(isPressed) {
+        if (this.y <= 0) return;
+
         this.y -= this.moveBy;
     }
 
-    moveDown(isPressed) {
+    moveDown(isPressed) { console.log(this.y);
+        if (this.y >= (APP_CONFIG.height - this.height)) return;
+
         this.y += this.moveBy;
     }
 
